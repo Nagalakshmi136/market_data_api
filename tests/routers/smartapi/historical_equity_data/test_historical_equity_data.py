@@ -1,9 +1,9 @@
 # pylint: disable=missing-function-docstring
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
-
-from app.routers.smartapi.smartapi.smartapi import router
-from app.schemas.stock_model import SmartAPIStockPriceInfo
+from icecream import ic
+from app.routers.smartapi.historical_equity_data.historical_equity_data import router
+from app.schemas.stock_model import HistoricalStockPriceInfo
 
 client = TestClient(router)
 
@@ -32,12 +32,12 @@ def validate_exception(endpoint_url, expected_error):
         assert http_exc.detail == expected_error["error"]
 
 
-def test_latest_price_quotes(stock_symbol_io):
+def test_historical_stock_data(stock_symbol_io):
     """
-    Test function to validate latest_price_quote endpoint.
+    Test function to validate historical_stock_data endpoint.
 
     This function verifies the operational behaviour of the
-    latest_price_quote endpoint across various input scenarios.
+    historical_stock_data endpoint across various input scenarios.
 
     Parameters:
     -----------
@@ -45,31 +45,26 @@ def test_latest_price_quotes(stock_symbol_io):
         List of inputs and respective outputs.
     """
     for stock_symbol_data in stock_symbol_io:
-        endpoint_url = f"/smart-api/equity/price/{stock_symbol_data['input']}"
+        endpoint_url = f"/smart-api/equity/history/{stock_symbol_data['input_stock_symbol']}?interval={stock_symbol_data['input_interval']}&start_date={stock_symbol_data['input_from_date']}&end_date={stock_symbol_data['input_to_date']}"
 
         if stock_symbol_data["status_code"] == 200:
             # Send a GET request to the endpoint URL
             response = client.get(endpoint_url)
+
             # Assert that the response status code matches the expected status code
             assert response.status_code == stock_symbol_data["status_code"]
-
+            data = response.json()
             # Assert that the response contains JSON data
             assert response.json() is not None
 
-            # Parse the response JSON into a SmartAPIStockPriceInfo object
-            smart_api_stock_price_info = SmartAPIStockPriceInfo.parse_obj(
-                response.json()
-            )
+            # Assert that the response is list of stock data
+            assert isinstance(data, list)
 
-            # Assert that the stock_price_info object is an instance of StockPriceInfo
-            assert isinstance(smart_api_stock_price_info, SmartAPIStockPriceInfo)
+            # Parse the response JSON into a HistoricalStockPriceInfo object
+            smart_api_stock_price_info = HistoricalStockPriceInfo.parse_obj(data[0])
 
-            # Check if the stock token and symbol in the SmartAPIStockPriceInfo object matches the stock symbol data
-            assert (
-                smart_api_stock_price_info.symbol_token
-                == stock_symbol_data["symbol_token"]
-            )
-            assert smart_api_stock_price_info.symbol == stock_symbol_data["symbol"]
+            # # Assert that the stock_price_info object is an instance of StockPriceInfo
+            assert isinstance(smart_api_stock_price_info, HistoricalStockPriceInfo)
 
         else:
             validate_exception(endpoint_url, stock_symbol_data)

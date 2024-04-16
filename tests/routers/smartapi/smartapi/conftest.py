@@ -4,6 +4,14 @@ import pytest
 
 @pytest.fixture
 def stock_symbol_io():
+    """
+    Provide list of inputs and respective outputs to check various possible cases.
+
+    Return:
+    -------
+    `List[dict]`
+          List of inputs and respective outputs
+    """
     return [
         {
             "input": "TCS",
