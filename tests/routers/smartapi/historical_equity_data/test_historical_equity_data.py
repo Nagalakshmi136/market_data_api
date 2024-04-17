@@ -1,7 +1,6 @@
-# pylint: disable=missing-function-docstring
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
-from icecream import ic
+
 from app.routers.smartapi.historical_equity_data.historical_equity_data import router
 from app.schemas.stock_model import HistoricalStockPriceInfo
 
@@ -45,7 +44,10 @@ def test_historical_stock_data(stock_symbol_io):
         List of inputs and respective outputs.
     """
     for stock_symbol_data in stock_symbol_io:
-        endpoint_url = f"/smart-api/equity/history/{stock_symbol_data['input_stock_symbol']}?interval={stock_symbol_data['input_interval']}&start_date={stock_symbol_data['input_from_date']}&end_date={stock_symbol_data['input_to_date']}"
+        endpoint_url = (
+            f"/smart-api/equity/history/{stock_symbol_data['input_stock_symbol']}?interval={stock_symbol_data['input_interval']}"
+            f"&start_date={stock_symbol_data['input_from_date']}&end_date={stock_symbol_data['input_to_date']}"
+        )
 
         if stock_symbol_data["status_code"] == 200:
             # Send a GET request to the endpoint URL

@@ -1,6 +1,6 @@
 import json
 from typing import Annotated, List
-from icecream import ic
+
 from fastapi import APIRouter, Path, Query
 
 from app.schemas.stock_model import HistoricalStockPriceInfo
@@ -10,9 +10,9 @@ from app.utils.smartapi.connection import get_endpoint_connection
 from app.utils.smartapi.data_processor import process_smart_api_historical_stock_data
 from app.utils.smartapi.urls import CANDLE_DATA_URL
 from app.utils.smartapi.validator import (
-    validate_symbol_and_get_token, 
-    validate_interval,
     validate_date_range,
+    validate_interval,
+    validate_symbol_and_get_token,
 )
 
 router = APIRouter(prefix="/smart-api/equity", tags=["equity"])
@@ -65,8 +65,8 @@ async def historical_stock_data(
 ):
     """
     Get the historical stock data for a given symbol.
-    This endpoint provides the historical candle data of the  given stock symbol for a particular time period from an External API in realtime.
-    Maximum possible time period for different candle interval is specified in the following link:
+    This endpoint provides the historical candle data of the  given stock symbol for a particular time period from an
+    External API in realtime.Maximum possible time period for different candle interval is specified in the following link:
     https://smartapi.angelbroking.com/docs/Historical
 
     Parameters:
@@ -81,7 +81,9 @@ async def historical_stock_data(
         stock_exchange=Exchange.NSE, stock_symbol=stock_symbol
     )
     interval = validate_interval(interval)
-    start_date, end_date = validate_date_range(start_date, end_date, interval, stock_symbol.split('-')[0])
+    start_date, end_date = validate_date_range(
+        start_date, end_date, interval, stock_symbol.split("-")[0]
+    )
     payload = {
         "exchange": Exchange.NSE.value,
         "tradingsymbol": stock_symbol,
@@ -100,4 +102,6 @@ async def historical_stock_data(
     res = connection.getresponse()
     data = res.read()
 
-    return process_smart_api_historical_stock_data(json.loads(data.decode("utf-8"))["data"])
+    return process_smart_api_historical_stock_data(
+        json.loads(data.decode("utf-8"))["data"]
+    )

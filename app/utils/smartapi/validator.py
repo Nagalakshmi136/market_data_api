@@ -1,3 +1,4 @@
+# pylint: disable=chained-comparison
 import re
 from bisect import bisect_left
 from datetime import datetime, time, timedelta
@@ -129,7 +130,10 @@ def validate_datetime(date_time: str) -> datetime:
             for hour_format_code in hour_format_codes:
                 for minute_format_code in minute_format_codes:
                     try:
-                        datetime_format = f"%Y{date_separator}%{month_format_code}{date_separator}%{day_format_code} %{hour_format_code}:%{minute_format_code}"
+                        datetime_format = (
+                            f"%Y{date_separator}%{month_format_code}{date_separator}"
+                            f"%{day_format_code} %{hour_format_code}:%{minute_format_code}"
+                        )
                         datetime_obj = datetime.strptime(date_time, datetime_format)
                         return datetime_obj
 

@@ -46,7 +46,10 @@ class InvalidDateTimeFormatException(HTTPException):
     def __init__(self, date_date: str):
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Given datetime format {date_date} is invalid. Please provide a valid datetime that should be in the form '%Y-%m-%d %H:%M'.",
+            detail=(
+                f"Given datetime format {date_date} is invalid. "
+                "Please provide a valid datetime that should be in the form '%Y-%m-%d %H:%M'."
+            ),
         )
 
 
@@ -58,7 +61,10 @@ class InvalidDateRangeBoundsException(HTTPException):
     def __init__(self, start_date: str, end_date: str, max_days: int, interval: str):
         super().__init__(
             status_code=status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE,
-            detail=f"The specified date range from {start_date} to {end_date} is invalid. Please ensure that the end date is greater than or equal to start date and difference between them does not exceed {max_days} for given interval {interval}.",
+            detail=(
+                f"The date range from {start_date} to {end_date} is invalid. Please ensure that the end date is greater than or "
+                f"equal to start date and difference between them does not exceed {max_days} for given interval {interval}.",
+            ),
         )
 
 
@@ -94,6 +100,20 @@ class DataUnavailableException(HTTPException):
         )
 
     def get_detail(self, stock_symbol: str, start_date: str) -> str:
+        """Provides the message related to the exception based on the stock symbol and start date.
+
+        Parameters:
+        -----------
+        stock_symbol: `str`
+            The symbol of the stock.
+        start_date: `str`
+            The date from where available of data starts.
+
+        Return:
+        -------
+        `str`
+            Message related the exception.
+        """
         if start_date is None:
             return f"No data available for this stock {stock_symbol}"
         return f"Data for the provided dates is unavailable; please use a date range starting from the {start_date} date onwards."

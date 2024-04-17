@@ -1,4 +1,4 @@
-# pylint: disable=missing-function-docstring
+# pylint: disable=line-too-long
 import pytest
 
 
@@ -179,5 +179,4 @@ def stock_symbol_io():
             "status_code": 416,
             "error": "The specified date range from 2023-10-11 10:34 to 2023-11-20 15:29 is invalid. Please ensure that the end date is greater than or equal to start date and difference between them does not exceed 30 for given interval ONE_MINUTE.",
         },
-        
     ]
