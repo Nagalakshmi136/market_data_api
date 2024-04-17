@@ -58,7 +58,7 @@ def process_smart_api_historical_stock_data(
     processed_historical_stock_data = []
     for stock_data in historical_stock_data:
         if len(stock_data) == 0:
-            break
+            continue
         processed_historical_stock_data.append(
             HistoricalStockPriceInfo(
                 timestamp=stock_data[0],

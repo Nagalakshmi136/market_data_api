@@ -48,7 +48,7 @@ class InvalidDateTimeFormatException(HTTPException):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
                 f"Given datetime format {date_date} is invalid. "
-                "Please provide a valid datetime that should be in the form '%Y-%m-%d %H:%M'."
+                "Please provide a valid datetime that should be in the form 'year-month-day hour:minute'."
             ),
         )
 
@@ -63,7 +63,7 @@ class InvalidDateRangeBoundsException(HTTPException):
             status_code=status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE,
             detail=(
                 f"The date range from {start_date} to {end_date} is invalid. Please ensure that the end date is greater than or "
-                f"equal to start date and difference between them does not exceed {max_days} for given interval {interval}.",
+                f"equal to start date and difference between them does not exceed {max_days} for given interval {interval}."
             ),
         )
 

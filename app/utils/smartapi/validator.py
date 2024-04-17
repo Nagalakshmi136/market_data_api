@@ -164,7 +164,7 @@ def check_market_open_between_dates(start_date: datetime, end_date: datetime):
         if (
             current_date.weekday() < 5
             and index != len(holidays_data)
-            and holidays_data[index] != current_date
+            and holidays_data[index] != current_date.strftime("%Y-%m-%d")
         ):
             return
         current_date += timedelta(days=1)
